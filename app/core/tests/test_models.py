@@ -1,8 +1,18 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from core import models
+
 
 class ModelTests(TestCase):
+
+    def setUp(self):
+        email = "user@example.com"
+        password = 'Testpass123'
+        self.user = get_user_model().objects.create_user(
+            email=email,
+            password=password
+        )
 
     def test_create_user_with_email_successful(self):
         """Test creating a new user with an email is successful"""
@@ -35,3 +45,11 @@ class ModelTests(TestCase):
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_ingredient_str(self):
+        """Test ingredient string representation"""
+        ingredient = models.Ingredient.objects.create(
+            user=self.user,
+            name="Cucumber"
+        )
+        self.assertEqual(str(ingredient), ingredient.name)
